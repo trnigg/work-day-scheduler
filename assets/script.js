@@ -12,9 +12,9 @@ $(document).ready(function() {
       console.log(hourDivID, eventName);
   
       // If eventName is not 'null', display event name in text input area
-      if (eventName) {
+      // if (eventName) {
         $(this).find('textarea').val(eventName);
-      }
+      // }
     });
 
     // on save-button click, take ID of parent div pair with input (ifNot empty) and save to localStorage 
@@ -22,11 +22,11 @@ $(document).ready(function() {
       const hourDivID = $(this).closest('div').attr('id');
       const textInput = $(this).siblings('textarea');
       const eventName = textInput.val().trim();
+      localStorage.setItem(hourDivID, eventName);
       if (eventName !== "") {
-        localStorage.setItem(hourDivID, eventName);
         alert(eventName + " successfully saved to schedule.");
       } else {
-        alert("Please enter name of event/appointment before saving.")
+        alert("Event/appointment successfully cleared from schedule.")
       }
     });
 
