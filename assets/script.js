@@ -17,7 +17,7 @@ $(document).ready(function() {
       }
     });
 
-    // on save-button click, take ID of parent div pair with input if not empty and save to localStorage 
+    // on save-button click, take ID of parent div pair with input (ifNot empty) and save to localStorage 
     saveButton.click(function() {
       const hourDivID = $(this).closest('div').attr('id');
       const textInput = $(this).siblings('textarea');
@@ -30,25 +30,24 @@ $(document).ready(function() {
       }
     });
 
+    // Get the 24-hour-of-day time in JS
+    let currentHour = dayjs().format("HH");
+    console.log(currentHour);
 
-    //
-    // TODO: Add code to apply the past, present, or future class to each time
-    // block by comparing the id to the current hour. HINTS: How can the id
-    // attribute of each time-block be used to conditionally add or remove the
-    // past, present, and future classes? How can Day.js be used to get the
-    // current hour in 24-hour time?
-    // Get(2 digit hour)
-      //if greater than ID-OUR = past
-      //else if equal present
-      //else () future
-      // advanced format plug in for ordinal advanced format plugin could help for 'kk' (2-dig year from 0 comparison)
-
-    //
-    // TODO: Add code to get any user input that was saved in localStorage and set
-    // the values of the corresponding textarea elements. HINT: How can the id
-    // attribute of each time-block be used to do this?
-    //
-
+    // Get all IDs that starts with "hour"
+    $('div[id^="hour"]').each(function() {
+      // Get the hour (last two digits) of the IDs
+      let classHour = $(this).attr('id').slice(-2);
+      console.log(classHour);
+      //compare hour of each class with current hour and apply conditional formatting by applying respective classes
+      if (classHour < currentHour) {
+        $(this).addClass("past");
+      } else if (classHour === currentHour) {
+        $(this).addClass("present");
+      } else {
+        $(this).addClass("future");
+      }
+    });
 
     // TODO: Add code to display the current date in the header of the page.
     let today = dayjs();
