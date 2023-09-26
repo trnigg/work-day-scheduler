@@ -1,6 +1,9 @@
 // FUNCTION to execute code only run after the DOM is fully loaded
 $(document).ready(function() {
 
+  // Add Day.js plugin for Ordinal Date Format - https://day.js.org/docs/en/plugin/loading-into-browser
+  dayjs.extend(window.dayjs_plugin_advancedFormat);
+
   // CONTAINER/ELEMENT VARIABLE(S)
   const saveButton = $('.saveBtn');
   const hourContainers = $('div[id^="hour"]');
@@ -10,7 +13,7 @@ $(document).ready(function() {
   const today = dayjs();
 
   // RENDER the current date in the header of the page:
-  currentDay.text(today.format('dddd, MMMM D')); // Need to add advanced format plug in for ordinal
+  currentDay.text(today.format('dddd, MMMM Do')); // Need to add advanced format plug in for ordinal
 
   // FUNCTION to load data from localStorage by looping through each div with ID starting with "hour"
   function loadFromLocalStorage() {
