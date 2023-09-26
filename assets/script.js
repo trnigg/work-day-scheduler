@@ -1,59 +1,62 @@
-// Execute code only run after the DOM is fully loaded
+// FUNCTION to execute code only run after the DOM is fully loaded
 $(document).ready(function() {
 
-  $(function () {
+  // CONTAINER/ELEMENT VARIABLE(S)
+  const saveButton = $('.saveBtn');
+  const hourContainers = $('div[id^="hour"]');
+  const currentDay = $('#currentDay');
 
-    const saveButton = $('.saveBtn');
+  // GLOBAL VARIABLE(S)
+  const today = dayjs();
 
-    // On page-load, load data from localStorage by looping through each div with ID starting with "hour"
-    $('div[id^="hour"]').each(function() {
+  // RENDER the current date in the header of the page:
+  currentDay.text(today.format('dddd, MMMM D')); // Need to add advanced format plug in for ordinal
+
+  // FUNCTION to load data from localStorage by looping through each div with ID starting with "hour"
+  function loadFromLocalStorage() {
+    hourContainers.each(function() {
       const hourDivID = $(this).attr('id'); // get full ID of current DIV;
       const eventName = localStorage.getItem(hourDivID); // get corresponding event name to Div ID
-      console.log(hourDivID, eventName);
-  
-      // If eventName is not 'null', display event name in text input area
-      // if (eventName) {
-        $(this).find('textarea').val(eventName);
-      // }
+        // RENDER retrieved data to textarea within this div
+      $(this).find('textarea').val(eventName);
     });
-
-    // on save-button click, take ID of parent div pair with input (ifNot empty) and save to localStorage 
+  }
+  
+  // FUNCTION to take ID of parent div pair with textarea-input and save to localStorage on save-button click
+  function saveToLocalStorage () {
     saveButton.click(function() {
       const hourDivID = $(this).closest('div').attr('id');
       const textInput = $(this).siblings('textarea');
       const eventName = textInput.val().trim();
       localStorage.setItem(hourDivID, eventName);
-      if (eventName !== "") {
-        alert(eventName + " successfully saved to schedule.");
+      // SUB-FUNCTION to display different alert depending on whether a new event has been saved or the field has been saved empty (i.e cleared)
+      if (eventName !== '') {
+        alert(eventName + ' successfully saved to schedule.');
       } else {
-        alert("Event/appointment successfully cleared from schedule.")
+        alert('Event/appointment successfully cleared from schedule.')
       }
     });
+  }
 
-    // Get the 24-hour-of-day time in JS
-    let currentHour = dayjs().format("HH");
-    console.log(currentHour);
-
-    // Get all IDs that starts with "hour"
-    $('div[id^="hour"]').each(function() {
-      // Get the hour (last two digits) of the IDs
-      let classHour = $(this).attr('id').slice(-2);
-      console.log(classHour);
-      //compare hour of each class with current hour and apply conditional formatting by applying respective classes
+  // FUNCTION to alter formatting of each container depending on relation to current time
+  function applyTimeFormatting() {
+    hourContainers.each(function() {
+      const classHour = $(this).attr('id').slice(-2); // Get the hour (last two digits) of the IDs
+      const currentHour = today.format('HH'); // Get the 24-hour-of-day time in JS
+      //SUB-FUNCTION to compare hour of each class with current hour and apply conditional formatting by applying respective classes
       if (classHour < currentHour) {
-        $(this).addClass("past");
+        $(this).addClass('past');
       } else if (classHour === currentHour) {
-        $(this).addClass("present");
+        $(this).addClass('present');
       } else {
-        $(this).addClass("future");
+        $(this).addClass('future');
       }
     });
-
-    // TODO: Add code to display the current date in the header of the page.
-    let today = dayjs();
-    const currentDay = $('#currentDay');
-    currentDay.text(today.format(' dddd, MMMM D')); // Need to add advanced format plug in for ordinal
-
-  });
+  }
+  
+  // EXECUTE functions on initialisation
+  loadFromLocalStorage();
+  saveToLocalStorage();
+  applyTimeFormatting();
 
 });
